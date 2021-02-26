@@ -1,55 +1,43 @@
-//声明gradle脚本自身需要使用的资源
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 buildscript {
     ext {
         springBootVersion = '2.4.3'
     }
-    //repositories为什么要要声明两次
-    //buildscript中的声明是gradle脚本自身需要使用的资源。可以声明的资源包括依赖项、第三方插件、maven仓库地址等.
-    //而在build.gradle文件中直接声明的依赖项、仓库地址等信息是项目自身需要的资源。
     repositories {
-        mavenLocal()
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        mavenCentral()
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        mavenCentral();
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-//所有项目配置
-allprojects {
-    group 'com.yuxh'
-    version '1.0-SNAPSHOT'
-    apply plugin: 'java'
 
-    sourceCompatibility = 8
-    targetCompatibility = 8
-    //指定编码格式
+//所有项目配置
+subprojects {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+
+    // 编译版本
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    // 编码
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
     }
-
+    // Maven资源库
     repositories {
         mavenLocal()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         mavenCentral()
     }
 
-    test {
-        useJUnitPlatform()
-    }
-}
-
-subprojects {
-    apply plugin: 'io.spring.dependency-management'
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        }
-    }
-
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation platform(SpringBootPlugin.BOM_COORDINATES)
     }
 }

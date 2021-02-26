@@ -1,3 +1,3 @@
 rootProject.name = 'inyaa'
+include 'inyaa-base'
 include 'inyaa-web'
-
