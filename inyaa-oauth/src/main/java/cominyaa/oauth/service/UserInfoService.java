@@ -36,7 +36,8 @@ public class UserInfoService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            List<String> roles = roleInfoRepository.findRoleKeyByUserId(user.getId());
+            //List<String> roles = roleInfoRepository.findRoleKeyByUserId(user.getId());
+            List<String> roles = new ArrayList<>();
             return buildUserForAuthentication(user, buildUserAuthority(roles));
         }
     }
