@@ -1,16 +1,29 @@
 dependencies {
     implementation project(':inyaa-base')
+    implementation project(':inyaa-security')
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+
+
 
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.2.0'
     implementation 'com.alibaba:fastjson:1.2.68'
     implementation 'org.fusesource:sigar:1.6.4'
+
+    implementation 'com.querydsl:querydsl-core'
+    implementation 'com.querydsl:querydsl-jpa'
+
+    annotationProcessor 'com.querydsl:querydsl-apt:4.4.0:jpa'
+    annotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     implementation 'com.qiniu:qiniu-java-sdk:7.2.15'
     implementation 'com.aliyun.oss:aliyun-sdk-oss:3.8.0'
     implementation 'com.qcloud:cos_api:5.6.8'
-    implementation 'com.vladsch.flexmark:flexmark:0.26.4'
-    implementation 'com.vladsch.flexmark:flexmark-util:0.26.4'
-    implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.26.4'
-    implementation 'org.jsoup:jsoup:1.9.2'
-    implementation 'org.apache.commons:commons-lang3'
     implementation 'cn.hutool:hutool-all:4.6.4'
 }

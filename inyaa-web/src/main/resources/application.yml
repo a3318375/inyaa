@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+
+spring:
+  datasource:
+    url: jdbc:mysql://122.51.60.92:3306/inyaa?useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8085/hello
+      client:
+        registration:
+          messaging-client-auth-code:
+            provider: keycloak
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/authorized"
+            scope: message.read,message.write
+          messaging-client-client-creds:
+            provider: keycloak
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: client_credentials
+            scope: message.read,message.write
+          messaging-client-password:
+            provider: keycloak
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: password
+            scope: message.read,message.write
+        provider:
+          keycloak:
+            authorization-uri: http://auth-server:8090/auth/realms/oauth2-sample/protocol/openid-connect/auth
+            token-uri: http://auth-server:8090/auth/realms/oauth2-sample/protocol/openid-connect/token
+
+messages:
+  base-uri: http://localhost:8092/messages

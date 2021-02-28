@@ -1,3 +1,5 @@
 rootProject.name = 'inyaa'
 include 'inyaa-base'
+include 'inyaa-oauth'
 include 'inyaa-web'
+include 'inyaa-security'
