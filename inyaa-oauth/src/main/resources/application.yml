@@ -42,10 +42,3 @@ jwt:
   jksStorePassword: 123456
   jksKeyAlias: oauth2
   jksKeyPassword: 123456
-
-
-#oauth2的client信息是基于内存还是基于数据库，如果不配置，默认为基于内存
-oauth2:
-  clients:
-    config:
-      jdbc: true

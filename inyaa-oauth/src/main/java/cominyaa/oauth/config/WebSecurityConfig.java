@@ -8,9 +8,12 @@ import org.springframework.security.access.event.LoggerListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,11 +22,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
@@ -41,13 +43,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.formLogin()
+                .loginPage("/oauth/login")
+                .loginProcessingUrl("/login")
+                //.defaultSuccessUrl("/")
+                .failureForwardUrl("/oauth/login?error=true")
+                .permitAll(); //登记界面，默认是permitAll
+
         http.authorizeRequests()
                 .antMatchers(customSecurityProperties.getPermitAll()).permitAll() //不用身份认证可以访问
-                .mvcMatchers("/.well-known/jwks.json", "/oauth/**").permitAll() //开放JWK SET端点，提供给资源服务器访问获取公钥信息
+                .mvcMatchers("/.well-known/jwks.json").permitAll() //开放JWK SET端点，提供给资源服务器访问获取公钥信息
                 .anyRequest().authenticated(); //其它的请求要求必须有身份认证
         http.csrf().disable();
         //开启跨域
         http.cors();
+        // session管理
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 
     /**

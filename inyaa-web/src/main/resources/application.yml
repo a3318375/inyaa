@@ -18,6 +18,16 @@ oauth2:
     logout: ${oauth2.server.url}/logout #可以实现单点登录，不能实现单点登出
 
 spring:
+  #thymeleaf
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    servlet:
+      content-type: text/html
+    suffix: .html
   application:
     name: oauth2-resource-server2
   datasource:

@@ -1,6 +1,6 @@
-package cominyaa.oauth.dao;
+package com.inyaa.base.auth.dao;
 
-import cominyaa.oauth.bean.RoleInfo;
+import com.inyaa.base.auth.bean.RoleInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
