@@ -1,5 +1,9 @@
 server:
-  port: 8080
+  port: 8082
+  servlet:
+    #不能配置为/，否则认证通过后不能重定向回客户端的访问地址
+    context-path: /server
+
 
 logging:
   level:
@@ -8,7 +12,14 @@ logging:
     org.springframework.security: INFO
     org.springframework.security.oauth2: INFO
 
+oauth2:
+  server:
+    url: http://localhost:8080
+    logout: ${oauth2.server.url}/logout #可以实现单点登录，不能实现单点登出
+
 spring:
+  application:
+    name: oauth2-resource-server2
   datasource:
     url: jdbc:mysql://122.51.60.92:3306/inyaa?useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
     username: root
@@ -20,32 +31,21 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8085/hello
+          jwk-set-uri: http://localhost:8080/.well-known/jwks.json
       client:
         registration:
-          messaging-client-auth-code:
-            provider: keycloak
-            client-id: messaging-client
-            client-secret: secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/authorized"
-            scope: message.read,message.write
-          messaging-client-client-creds:
-            provider: keycloak
-            client-id: messaging-client
-            client-secret: secret
-            authorization-grant-type: client_credentials
-            scope: message.read,message.write
-          messaging-client-password:
-            provider: keycloak
-            client-id: messaging-client
-            client-secret: secret
-            authorization-grant-type: password
-            scope: message.read,message.write
+          inyaa: # 1 注册客户端名称，随意指定，但是要与provider的配置相一致
+            client-id: postman # 2 客户端ID
+            client-secret: postman # 3 客户端密码
+            authorization-grant-type: authorization_code # 4 认证类型
+            #默认重定向URI模板是{baseUrl}/login/oauth2/code/{registrationId}。
+            #registrationId是ClientRegistration的唯一标识符。
+            redirect-uri: http://localhost:8082/server/login/oauth2/code/my-client  # 5 回调地址，需要配置到数据表中，默认写法，注意最后的路径是注册客户端名称
+            scope: any #请求范围
+            client-name: 客户端1
         provider:
-          keycloak:
-            authorization-uri: http://auth-server:8090/auth/realms/oauth2-sample/protocol/openid-connect/auth
-            token-uri: http://auth-server:8090/auth/realms/oauth2-sample/protocol/openid-connect/token
-
-messages:
-  base-uri: http://localhost:8092/messages
+          inyaa:
+            authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
+            token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
+            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置
+            userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
