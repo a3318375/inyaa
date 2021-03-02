@@ -1,7 +1,7 @@
-package com.inyaa.base.auth.dao;
+package cominyaa.oauth.dao;
 
 
-import com.inyaa.base.auth.bean.UserInfo;
+import cominyaa.oauth.bean.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {

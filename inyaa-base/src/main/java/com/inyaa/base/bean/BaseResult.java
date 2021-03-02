@@ -19,7 +19,7 @@ public class BaseResult<R> {
     }
 
     public static <R> BaseResult<R> success(R data) {
-        return new BaseResult<R>().setStatus(true).setMsg("成功").setData(data);
+        return new BaseResult<R>().setStatus(true).setCode(200).setMsg("成功").setData(data);
     }
 
     public static <R> BaseResult<R> error(int code, String msg) {

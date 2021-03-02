@@ -16,6 +16,8 @@ oauth2:
   server:
     url: http://localhost:8080
     logout: ${oauth2.server.url}/logout #可以实现单点登录，不能实现单点登出
+    client-id: postman # 2 客户端ID
+    client-secret: postman # 3 客户端密码
 
 spring:
   #thymeleaf

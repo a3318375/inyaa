@@ -1,8 +1,10 @@
 package com.inyaa.web.posts.bean;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class BaseVo {
 
     private Long id;

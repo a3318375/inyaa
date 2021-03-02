@@ -1,8 +1,8 @@
 package cominyaa.oauth.service;
 
-import com.inyaa.base.auth.bean.UserInfo;
-import com.inyaa.base.auth.dao.RoleInfoRepository;
-import com.inyaa.base.auth.dao.UserInfoRepository;
+import cominyaa.oauth.bean.UserInfo;
+import cominyaa.oauth.dao.RoleInfoRepository;
+import cominyaa.oauth.dao.UserInfoRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

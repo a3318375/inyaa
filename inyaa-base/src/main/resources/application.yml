@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://122.51.60.92:3306/inyaa?useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true

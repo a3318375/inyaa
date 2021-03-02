@@ -89,6 +89,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		enhancerChain.setTokenEnhancers(enhancerList); //将自定义Enhancer加入EnhancerChain的delegates数组中
 
 		endpoints
+				.exceptionTranslator(new AuthWebResponseExceptionTranslator())
 				//设置tokenStore
 				.tokenStore(jwtTokenStore)
 				//支持 refresh_token 模式

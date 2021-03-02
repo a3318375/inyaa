@@ -1,4 +1,4 @@
-package com.inyaa.base.auth.bean;
+package cominyaa.oauth.bean;
 
 import lombok.Data;
 

@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
 
@@ -111,29 +112,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public LoggerListener eventLoggerListener() {
         return new LoggerListener();
-    }
-
-    /**
-     * 跨域配置类
-     */
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-        //开放哪些ip、端口、域名的访问权限，星号表示开放所有域
-        corsConfiguration.addAllowedOrigin("*");
-        //corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:8081"));
-        //开放哪些Http方法，允许跨域访问
-        corsConfiguration.addAllowedMethod("*");
-        //corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
-        //允许HTTP请求中的携带哪些Header信息
-        corsConfiguration.addAllowedHeader("*");
-        //是否允许发送Cookie信息
-        corsConfiguration.setAllowCredentials(true);
-
-        //添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置
-        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
-        configSource.registerCorsConfiguration("/**", corsConfiguration);
-
-        return configSource;
     }
 }
