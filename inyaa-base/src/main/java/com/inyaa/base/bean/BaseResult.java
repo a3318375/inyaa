@@ -6,44 +6,44 @@ package com.inyaa.base.bean;
  */
 public class BaseResult<R> {
 
-    private boolean status;
+    private boolean success;
 
     private int code;
 
-    private String msg;
+    private String errorMessage;
 
     private R data;
 
     public static <R> BaseResult<R> success() {
-        return new BaseResult<R>().setStatus(true).setMsg("成功");
+        return new BaseResult<R>().setSuccess(true).setErrorMessag("成功");
     }
 
     public static <R> BaseResult<R> success(R data) {
-        return new BaseResult<R>().setStatus(true).setCode(200).setMsg("成功").setData(data);
+        return new BaseResult<R>().setSuccess(true).setCode(200).setErrorMessag("成功").setData(data);
     }
 
     public static <R> BaseResult<R> error(int code, String msg) {
         BaseResult<R> result = new BaseResult<>();
-        result.setStatus(false);
+        result.setSuccess(false);
         result.setCode(code);
-        result.setMsg(msg);
+        result.setErrorMessag(msg);
         return result;
     }
 
     public static <R> BaseResult<R> error() {
         BaseResult<R> result = new BaseResult<>();
-        result.setStatus(false);
+        result.setSuccess(false);
         result.setCode(-1);
-        result.setMsg("失败");
+        result.setErrorMessag("失败");
         return result;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public BaseResult<R> setStatus(boolean status) {
-        this.status = status;
+    public BaseResult<R> setSuccess(boolean success) {
+        this.success = success;
         return this;
     }
 
@@ -56,12 +56,12 @@ public class BaseResult<R> {
         return this;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public BaseResult<R> setMsg(String msg) {
-        this.msg = msg;
+    public BaseResult<R> setErrorMessag(String errorMessage) {
+        this.errorMessage = errorMessage;
         return this;
     }
 

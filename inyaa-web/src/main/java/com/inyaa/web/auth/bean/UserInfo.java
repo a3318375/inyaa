@@ -27,7 +27,7 @@ public class UserInfo {
     private String loginIp;// 最后登录IP
     private String avatar; //头像
     private String socialId; //社交账号id
-    private String roleId; //角色主键 1 普通用户 2 admin
+    private Integer roleId; //角色主键 1 普通用户 2 admin
     private boolean accountNonExpired; // 账号是否未过期
     private boolean accountNonLocked; // 账号是否未锁定
     private boolean credentialsNonExpired; // 账号凭证是否未过期

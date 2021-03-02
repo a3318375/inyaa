@@ -1,15 +1,12 @@
 package com.inyaa.web.auth.controller;
 
-import cn.hutool.json.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.auth.bean.UserInfo;
-import com.inyaa.web.auth.service.AuthUserService;
+import com.inyaa.web.exception.CustomErrorHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -18,12 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class LoginController {
@@ -33,11 +29,7 @@ public class LoginController {
 
     public LoginController(RestTemplateBuilder restTemplateBuilder, ClientRegistrationRepository clientRegistrationRepository) {
         this.restTemplate = restTemplateBuilder.build();
-        this.restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
-            @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
-            }
-        });
+        this.restTemplate.setErrorHandler(new CustomErrorHandler());
         this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
@@ -53,11 +45,11 @@ public class LoginController {
         String url = "%s/oauth/token?username=%s&password=%s&grant_type=password&client_id=%s&client_secret=%s";
         url = String.format(url, authMainUrl, req.getUsername(), req.getPassword(), clientId, clientSecret);
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        ResponseEntity<Object> resp = restTemplate.getForEntity(url, Object.class);
+        ResponseEntity<JSONObject> resp = restTemplate.getForEntity(url, JSONObject.class);
         if (resp.getStatusCodeValue() == 200) {
             return BaseResult.success(resp.getBody());
         } else {
-            return BaseResult.error(resp.getStatusCodeValue(), resp.getBody().toString());
+            return BaseResult.error(resp.getStatusCodeValue(), Objects.requireNonNull(resp.getBody()).getString("error_description"));
         }
     }
 

@@ -28,7 +28,7 @@ public class AuthUserService {
                 .setName(userInfo.getName())
                 .setAvatar(userInfo.getAvatar())
                 .setEmail(userInfo.getEmail()))
-                .setStatus(userInfo.isAccountNonLocked());
+                .setSuccess(userInfo.isAccountNonLocked());
 
     }
 
