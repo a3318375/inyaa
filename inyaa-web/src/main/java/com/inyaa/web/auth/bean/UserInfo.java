@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "inyaa_sys_user")
+@Table(name = "sys_user")
 @Accessors(chain = true)
 public class UserInfo {
 
