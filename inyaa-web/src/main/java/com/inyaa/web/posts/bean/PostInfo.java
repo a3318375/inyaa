@@ -1,17 +1,21 @@
 package com.inyaa.web.posts.bean;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * @author: yuxh
+ * @date: 2021/3/5 15:32
+ */
 @Entity
-@Table(name = "inyaa_posts")
+@Table(name = "post_info")
 @Data
-public class Posts {
-
+public class PostInfo extends BaseVo{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键生成策略
-    private Long id;
+    private Integer id;
 
     /**
      * 文章标题
@@ -21,11 +25,12 @@ public class Posts {
     /**
      * 封面图
      */
-    private String thumbnail;
+    private String cover;
 
     /**
      * 评论数
      */
+    @Column(name = "comments", insertable = false, updatable = false)
     private Integer comments;
 
     /**
@@ -41,16 +46,13 @@ public class Posts {
     /**
      * 浏览次数
      */
+    @Column(name = "views", insertable = false, updatable = false)
     private Integer views;
-
-    /**
-     * 文章权重
-     */
-    private Integer weight;
 
     /**
      * 创建时间
      */
+    @Column(name = "create_time", insertable = false, updatable = false)
     private LocalDateTime createTime;
 
     /**
@@ -59,22 +61,17 @@ public class Posts {
     private LocalDateTime updateTime;
 
     /**
-     * 创建人
+     * 用户id，作者
      */
-    private Long authorId;
+    private Integer userId;
 
     /**
      * 是否打开评论
      */
-    private Integer isComment;
-
-    /**
-     * 同步到byteblogs状态 (0 未同步 或者同步失败的状态 1同步已成功)
-     */
-    private Integer syncStatus;
+    private Boolean isComment;
 
     /**
      * 文章分类Id
      */
-    private Integer categoryId;
+    private Integer typeId;
 }

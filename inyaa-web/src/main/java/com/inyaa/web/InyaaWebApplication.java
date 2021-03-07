@@ -1,10 +1,11 @@
 package com.inyaa.web;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Bean;
+
+import javax.persistence.EntityManager;
 
 @SpringBootApplication
 public class InyaaWebApplication {
@@ -13,9 +14,9 @@ public class InyaaWebApplication {
         SpringApplication.run(InyaaWebApplication.class, args);
     }
 
-//    @Bean
-//    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
-//        return new JPAQueryFactory(entityManager);
-//    }
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
+        return new JPAQueryFactory(entityManager);
+    }
 
 }

@@ -4,16 +4,20 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/**
+ * @author: yuxh
+ * @date: 2021/3/5 23:56
+ */
 @Entity
-@Table(name = "inyaa_posts_attribute")
+@Table(name = "post_tag")
 @Data
-public class PostsAttribute {
+public class PostTag {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键生成策略
-    private Long id;
+    private Integer id;
 
-    private String content;
+    private Integer postId;
 
-    private Long postsId;
+    private Integer tagId;
 }

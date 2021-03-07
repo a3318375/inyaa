@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BaseVo {
 
-    private Long id;
     /**
      * 关键词搜索
      */
