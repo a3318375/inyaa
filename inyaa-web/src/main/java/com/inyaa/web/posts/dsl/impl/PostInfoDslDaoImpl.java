@@ -5,7 +5,9 @@ import com.inyaa.web.posts.bean.QPostInfo;
 import com.inyaa.web.posts.bean.QPostTag;
 import com.inyaa.web.posts.dsl.PostInfoDslDao;
 import com.inyaa.web.posts.dto.PostInfoDto;
+import com.inyaa.web.posts.vo.PostArchiveVo;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * @author: yuxh
@@ -51,6 +54,9 @@ public class PostInfoDslDaoImpl implements PostInfoDslDao {
         if (req.getStatus() != null) {
             jpaQuery.where(qBean.status.eq(req.getStatus()));
         }
+        if (req.getWeight() != null) {
+            jpaQuery.where(qBean.weight.eq(req.getWeight()));
+        }
         if (req.getTypeId() != null) {
             jpaQuery.where(qBean.typeId.eq(req.getTypeId()));
         }
@@ -59,4 +65,26 @@ public class PostInfoDslDaoImpl implements PostInfoDslDao {
         return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
     }
 
+    @Override
+    public List<PostArchiveVo> findArchiveList() {
+        QPostInfo qBean = QPostInfo.postInfo;
+        StringTemplate dateFmt = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m')", qBean.createTime);
+        JPAQuery<PostArchiveVo> jpaQuery = jpaQueryFactory
+                .select(Projections.bean(PostArchiveVo.class, dateFmt.as("archiveDate")))
+                .from(qBean)
+                .groupBy(dateFmt)
+                .orderBy(dateFmt.desc());
+        return jpaQuery.fetch();
+    }
+
+    @Override
+    public List<PostInfo> findByArchiveDate(String archiveDate) {
+        QPostInfo qBean = QPostInfo.postInfo;
+        StringTemplate dateFmt = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m')", qBean.createTime);
+        JPAQuery<PostInfo> jpaQuery = jpaQueryFactory
+                .select(qBean)
+                .from(qBean)
+                .where(dateFmt.eq(archiveDate));
+        return jpaQuery.fetch();
+    }
 }

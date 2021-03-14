@@ -3,6 +3,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 buildscript {
     ext {
         springBootVersion = '2.4.3'
+        set('springCloudVersion', "2020.0.1")
     }
     repositories {
         maven {
@@ -36,12 +37,17 @@ subprojects {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         mavenCentral()
     }
-
     dependencies {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
         runtimeOnly 'mysql:mysql-connector-java'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         implementation platform(SpringBootPlugin.BOM_COORDINATES)
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
     }
 }

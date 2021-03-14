@@ -1,5 +1,6 @@
 package com.inyaa.web.config;
 
+import com.inyaa.web.auth.dao.SysApiDao;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.access.event.LoggerListener;
@@ -14,13 +15,10 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationEntryPoint authenticationEntryPoint;
     @Resource
     private ResourceAccessDeniedHandler resourceAccessDeniedHandler;
+    @Resource
+    private SysApiDao sysApiDao;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -43,17 +43,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //开启跨域
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+        List<String> list = sysApiDao.findUrlByAllowAccess();
+        list.add("/login");
+        list.add("/swagger-ui/**");
+        list.add("/server/v3/api-docs**");
+        String[] urls = list.toArray(new String[0]);
         //权限控制
         http.authorizeRequests()//登录成功就可以访问
                 .antMatchers("/res/**", "/user/**").authenticated()
                 //需要具备相应的角色才能访问
                 //.antMatchers("/user/**").hasAnyRole("admin", "user")
                 //不需要登录就可以访问
-                .antMatchers("/login","/swagger-ui/**", "/server/v3/api-docs**").permitAll()
+                .antMatchers(urls).permitAll()
                 //其它路径需要根据指定的方法判断是否有权限访问，基于权限管理模型认证
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
-
+        for (String url:  list) {
+            http.antMatcher(url);
+        }
 
         //鉴权时只支持Bearer Token的形式，不支持url后加参数access_token
         http.oauth2ResourceServer()//开启oauth2资源认证

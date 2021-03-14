@@ -4,9 +4,13 @@ import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.posts.bean.PostInfo;
 import com.inyaa.web.posts.dto.PostInfoDto;
 import com.inyaa.web.posts.service.PostInfoService;
+import com.inyaa.web.posts.vo.PostArchiveVo;
+import com.inyaa.web.posts.vo.PostsAdminVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -26,8 +30,8 @@ public class PostsController {
         return BaseResult.success();
     }
 
-    @GetMapping("/get/{id}")
-    public BaseResult<PostInfo> get(@PathVariable(value = "id") Integer id) {
+    @GetMapping("/get")
+    public BaseResult<PostsAdminVO> get(Integer id) {
         return postInfoService.get(id);
     }
 
@@ -36,8 +40,19 @@ public class PostsController {
         return postInfoService.list(req);
     }
 
-    @PostMapping("/delete/{id}")
-    public BaseResult<String> delete(@PathVariable(value = "id") Integer id) {
+    @GetMapping("/weight/list")
+    public BaseResult<Page<PostInfo>> weight(PostInfoDto req) {
+        req.setWeight(1);
+        return postInfoService.list(req);
+    }
+
+    @GetMapping("/archive/list")
+    public BaseResult<List<PostArchiveVo>> archive() {
+        return postInfoService.archive();
+    }
+
+    @PostMapping("/delete")
+    public BaseResult<String> delete(@RequestBody Integer id) {
         postInfoService.delete(id);
         return BaseResult.success();
     }

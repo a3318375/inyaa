@@ -1,5 +1,6 @@
 package com.inyaa.web.posts.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "post_info")
 @Data
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer"})
 public class PostInfo extends BaseVo{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键生成策略
@@ -74,4 +76,9 @@ public class PostInfo extends BaseVo{
      * 文章分类Id
      */
     private Integer typeId;
+
+    /**
+     * 文章权重
+     */
+    private Integer weight;
 }

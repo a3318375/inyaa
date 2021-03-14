@@ -1,7 +1,7 @@
 package com.inyaa.web.auth.service;
 
-import com.inyaa.web.auth.bean.MenuInfo;
-import com.inyaa.web.auth.dao.MenuInfoRepository;
+import com.inyaa.web.auth.bean.SysMenu;
+import com.inyaa.web.auth.dao.SysMenuDao;
 import com.inyaa.web.auth.vo.MenuVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -19,26 +19,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuInfService {
 
-    private final MenuInfoRepository menuInfoRepository;
+    private final SysMenuDao sysMenuDao;
 
-    private List<MenuInfo> findMenuList(Integer pid) {
-        MenuInfo user = new MenuInfo();
-        user.setType(0);
+    private List<SysMenu> findMenuList(Integer pid) {
+        SysMenu user = new SysMenu();
         user.setOpen(1);
         user.setPid(pid);
         ExampleMatcher matcher = ExampleMatcher.matching();
-        Example<MenuInfo> ex = Example.of(user, matcher);
-        return menuInfoRepository.findAll(ex);
+        Example<SysMenu> ex = Example.of(user, matcher);
+        return sysMenuDao.findAll(ex);
     }
 
-    private List<MenuVo> findMenuList(List<MenuInfo> list) {
+    private List<MenuVo> findMenuList(List<SysMenu> list) {
         List<MenuVo> menuVOS = new ArrayList<>();
         list.forEach(menuInfo -> {
             MenuVo vo = new MenuVo();
             vo.setName(menuInfo.getName())
                     .setPath(menuInfo.getPath())
+                    .setCode(menuInfo.getCode())
                     .setIcon(menuInfo.getIcon());
-            List<MenuInfo> chindres = findMenuList(menuInfo.getId());
+            List<SysMenu> chindres = findMenuList(menuInfo.getId());
             if (chindres.size() > 0) {
                 vo.setChildren(findMenuList(chindres));
             }

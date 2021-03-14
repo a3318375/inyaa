@@ -8,10 +8,14 @@ import com.inyaa.web.posts.dao.PostArticleDao;
 import com.inyaa.web.posts.dao.PostInfoDao;
 import com.inyaa.web.posts.dao.PostTagDao;
 import com.inyaa.web.posts.dto.PostInfoDto;
+import com.inyaa.web.posts.vo.PostArchiveVo;
+import com.inyaa.web.posts.vo.PostsAdminVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: yuxh
@@ -47,9 +51,16 @@ public class PostInfoService {
         }
     }
 
-    public BaseResult<PostInfo> get(int id) {
+    public BaseResult<PostsAdminVO> get(int id) {
         PostInfo info = postInfoDao.getOne(id);
-        return BaseResult.success(info);
+
+        PostsAdminVO vo = new PostsAdminVO();
+        BeanUtils.copyProperties(info, vo);
+        String context = postArticleDao.getContextByPostId(info.getId());
+        vo.setContext(context);
+        List<Integer> tagIdList = postTagDao.findTagIdByPostId(info.getId());
+        vo.setTagList(tagIdList);
+        return BaseResult.success(vo);
     }
 
     public BaseResult<Page<PostInfo>> list(PostInfoDto req) {
@@ -59,5 +70,15 @@ public class PostInfoService {
 
     public void delete(int id) {
         postInfoDao.deleteById(id);
+    }
+
+    public BaseResult<List<PostArchiveVo>> archive() {
+        List<PostArchiveVo> list = postInfoDao.findArchiveList();
+        list.forEach(vo -> {
+            List<PostInfo> infoList = postInfoDao.findByArchiveDate(vo.getArchiveDate());
+            vo.setArchivePosts(infoList);
+            vo.setArticleTotal(infoList.size());
+        });
+        return BaseResult.success(list);
     }
 }

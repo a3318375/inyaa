@@ -16,5 +16,6 @@ public class MenuVo {
     private String name;
     private String path;
     private String icon;
+    private String code;
     private List<MenuVo> children;
 }

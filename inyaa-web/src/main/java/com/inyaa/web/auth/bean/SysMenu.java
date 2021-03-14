@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name="sys_menu")
-public class MenuInfo {
+public class SysMenu {
 
     @Id
     @GeneratedValue
@@ -25,6 +25,8 @@ public class MenuInfo {
 
     private String name; //名称
 
+    private String code; //菜单编码
+
     private String path; //路径
 
     private String icon; //图标
@@ -32,8 +34,6 @@ public class MenuInfo {
     private Integer sort; //排序
 
     private Integer open; //是否开启（0关 1开）
-
-    private Integer type; //菜单类型 （0菜单 1按钮
 
     private LocalDateTime createTime; //创建时间
 

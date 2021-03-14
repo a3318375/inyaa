@@ -1,8 +1,13 @@
 dependencies {
     api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
     api 'org.apache.commons:commons-lang3'
     implementation 'com.vladsch.flexmark:flexmark:0.26.4'
     implementation 'com.vladsch.flexmark:flexmark-util:0.26.4'
     implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.26.4'
     implementation 'org.jsoup:jsoup:1.9.2'
+
+    implementation 'com.aliyun.oss:aliyun-sdk-oss:3.8.0'
+    implementation 'com.qcloud:cos_api:5.6.8'
+    implementation 'com.qiniu:qiniu-java-sdk:7.2.15'
 }
