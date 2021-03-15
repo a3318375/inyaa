@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "post_comment")
 @Data
-public class PostComment {
+public class PostComment extends BaseVo {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)//主键生成策略
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//主键生成策略
     private Integer id;
 
     /**

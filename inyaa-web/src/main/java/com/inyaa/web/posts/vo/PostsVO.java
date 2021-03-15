@@ -10,7 +10,7 @@ import lombok.Data;
  * @author byteblogs
  * @since 2019-08-28
  */
-@Data
+ @Data
 public class PostsVO extends PostInfo {
 
 }
