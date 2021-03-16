@@ -1,3 +1,4 @@
 dependencies {
+    implementation project(':inyaa-base')
     implementation 'org.springframework.security.oauth:spring-security-oauth2:2.3.6.RELEASE'
 }
