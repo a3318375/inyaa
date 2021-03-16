@@ -57,9 +57,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(urls).permitAll()
                 //其它路径需要根据指定的方法判断是否有权限访问，基于权限管理模型认证
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
-        for (String url:  list) {
-            http.antMatcher(url);
-        }
 
         //鉴权时只支持Bearer Token的形式，不支持url后加参数access_token
         http.oauth2ResourceServer()//开启oauth2资源认证
