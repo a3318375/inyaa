@@ -3,7 +3,6 @@ MAINTAINER 184608371@qq.com
 
 #对外暴漏的端口号
 EXPOSE 8082
-
 WORKDIR /
 
 #将本地项目jar包拷贝到Docker容器中的位置
