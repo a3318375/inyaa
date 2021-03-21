@@ -4,13 +4,13 @@ import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.posts.bean.PostInfo;
 import com.inyaa.web.posts.dto.PostInfoDto;
 import com.inyaa.web.posts.service.PostInfoService;
-import com.inyaa.web.posts.vo.PostArchiveVo;
 import com.inyaa.web.posts.vo.PostsAdminVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -47,7 +47,7 @@ public class PostsController {
     }
 
     @GetMapping("/archive/list")
-    public BaseResult<List<PostArchiveVo>> archive() {
+    public BaseResult<Map<String, Map<String, List<PostInfo>>>> archive() {
         return postInfoService.archive();
     }
 

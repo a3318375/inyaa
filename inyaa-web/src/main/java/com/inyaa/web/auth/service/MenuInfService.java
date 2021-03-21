@@ -6,6 +6,7 @@ import com.inyaa.web.auth.vo.MenuVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class MenuInfService {
         user.setPid(pid);
         ExampleMatcher matcher = ExampleMatcher.matching();
         Example<SysMenu> ex = Example.of(user, matcher);
-        return sysMenuDao.findAll(ex);
+        Sort sort = Sort.by("sort").ascending();
+        return sysMenuDao.findAll(ex, sort);
     }
 
     private List<MenuVo> findMenuList(List<SysMenu> list) {

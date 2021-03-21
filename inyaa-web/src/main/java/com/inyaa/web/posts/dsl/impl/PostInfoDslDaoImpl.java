@@ -61,6 +61,7 @@ public class PostInfoDslDaoImpl implements PostInfoDslDao {
             jpaQuery.where(qBean.typeId.eq(req.getTypeId()));
         }
         jpaQuery.orderBy(qBean.createTime.desc());
+        jpaQuery.offset(page.getOffset()).limit(page.getPageSize());
         QueryResults<PostInfo> queryResults = jpaQuery.fetchResults();
         return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
     }

@@ -8,14 +8,17 @@ import com.inyaa.web.posts.dao.PostArticleDao;
 import com.inyaa.web.posts.dao.PostInfoDao;
 import com.inyaa.web.posts.dao.PostTagDao;
 import com.inyaa.web.posts.dto.PostInfoDto;
-import com.inyaa.web.posts.vo.PostArchiveVo;
 import com.inyaa.web.posts.vo.PostsAdminVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: yuxh
@@ -72,13 +75,32 @@ public class PostInfoService {
         postInfoDao.deleteById(id);
     }
 
-    public BaseResult<List<PostArchiveVo>> archive() {
-        List<PostArchiveVo> list = postInfoDao.findArchiveList();
-        list.forEach(vo -> {
-            List<PostInfo> infoList = postInfoDao.findByArchiveDate(vo.getArchiveDate());
-            vo.setArchivePosts(infoList);
-            vo.setArticleTotal(infoList.size());
+    public BaseResult<Map<String, Map<String, List<PostInfo>>>> archive() {
+        Sort sort = Sort.by("createTime").descending();
+        List<PostInfo> list = postInfoDao.findAll(sort);
+        Map<String, Map<String, List<PostInfo>>> resp = new LinkedHashMap<>();
+        list.forEach(post -> {
+            String year = post.getCreateTime().getYear() + "年";
+            String month = post.getCreateTime().getMonthValue() + "月";
+            Map<String, List<PostInfo>> monthMap;
+            if (resp.containsKey(year)) {
+                monthMap = resp.get(year);
+                List<PostInfo> monthList;
+                if (monthMap.containsKey(month)) {
+                    monthList = monthMap.get(month);
+                } else {
+                    monthList = new ArrayList<>();
+                }
+                monthList.add(post);
+                monthMap.put(month, monthList);
+            } else {
+                monthMap = new LinkedHashMap<>();
+                List<PostInfo> monthList = new ArrayList<>();
+                monthList.add(post);
+                monthMap.put(month, monthList);
+            }
+            resp.put(year, monthMap);
         });
-        return BaseResult.success(list);
+        return BaseResult.success(resp);
     }
 }
