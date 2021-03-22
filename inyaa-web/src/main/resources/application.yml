@@ -47,6 +47,9 @@ spring:
             redirect-uri: http://localhost:8082/server/login/oauth2/code/my-client  # 5 回调地址，需要配置到数据表中，默认写法，注意最后的路径是注册客户端名称
             scope: any #请求范围
             client-name: 客户端1
+          github:
+            client-id: e6e6a9b66c052a99a288 # 2 客户端ID
+            client-secret: 93129918b0aae5b8dcc41656dda70bab04e94527 # 3 客户端密码
         provider:
           inyaa:
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
