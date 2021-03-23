@@ -84,7 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //access_token认证后没有对应的权限时的处理方式
                 .accessDeniedHandler(resourceAccessDeniedHandler);
 
-        http.oauth2Login();
+        http.oauth2Login().defaultSuccessUrl("http://localhost:3000");
         http.oauth2Client();
         http.csrf().disable();
     }

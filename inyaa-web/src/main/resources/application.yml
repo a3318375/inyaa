@@ -21,7 +21,7 @@ oauth2:
 
 spring:
   application:
-    name: oauth2-resource-server2
+    name: inyaa-web
   datasource:
     url: jdbc:mysql://122.51.60.92:32129/inyaa?useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
     username: root
