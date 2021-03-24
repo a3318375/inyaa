@@ -4,16 +4,17 @@ import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.auth.bean.UserInfo;
 import com.inyaa.web.auth.service.AuthUserService;
 import com.inyaa.web.auth.vo.AuthUserVO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -55,6 +56,11 @@ public class AuthUserController {
         } else {
             return BaseResult.error();
         }
+    }
+
+    @GetMapping("/user")
+    public Map<String, Object> user (@AuthenticationPrincipal OAuth2User principal) {
+        return Collections.singletonMap("name", principal.getAttribute("name"));
     }
 
     @DeleteMapping("/delete/{id}")
