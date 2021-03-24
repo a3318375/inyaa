@@ -1,5 +1,7 @@
 package com.inyaa.web.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.auth.dao.SysApiDao;
 import com.inyaa.web.auth.service.OauthUserService;
 import com.inyaa.web.exception.CustomException;
@@ -25,6 +27,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +76,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.oauth2Login().defaultSuccessUrl("http://localhost:3000")
                 .userInfoEndpoint().userService(oauthUserService);
         http.oauth2Client();
+        http.logout().logoutSuccessHandler((req, resp, authentication) -> {
+            BaseResult<String> res = BaseResult.success();
+            resp.setContentType("application/json;charset=utf-8");
+            PrintWriter out = resp.getWriter();
+            out.write(new ObjectMapper().writeValueAsString(res));
+            out.flush();
+            out.close();
+        });
         http.csrf().disable();
         http.exceptionHandling()
                 //access_token无效或过期时的处理方式
