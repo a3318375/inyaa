@@ -9,8 +9,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,8 +50,8 @@ public class AuthUserController {
     @RequestMapping("/info")
     public BaseResult<AuthUserVO> userInfo(Authentication authentication) {
         Object principal = authentication.getPrincipal();
-        if (principal instanceof Jwt) {
-            String username = ((Jwt) principal).getClaim("user_name");
+        if (principal instanceof DefaultOAuth2User) {
+            String username = ((DefaultOAuth2User) principal).getName();
             return authUserService.getUserInfo(username);
         } else {
             return BaseResult.error();

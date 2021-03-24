@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 
 /**
@@ -23,6 +24,9 @@ public class AuthUserService {
 
     public BaseResult<AuthUserVO> getUserInfo(String username) {
         UserInfo userInfo = userInfoRepository.getByUsername(username);
+        if (userInfo.getRoleId() == null) {
+            userInfo.setRoleId(1);
+        }
         return BaseResult.success(new AuthUserVO()
                 .setRoles(Collections.singletonList(RoleEnum.getEnumTypeMap().get(userInfo.getRoleId()).getRoleName()))
                 .setName(userInfo.getName())
@@ -49,7 +53,7 @@ public class AuthUserService {
         ExampleMatcher matcher = ExampleMatcher.matching();
         UserInfo req = new UserInfo();
         if (StringUtils.isNotBlank(authUserVO.getKeywords())) {
-            matcher.withMatcher("name" ,ExampleMatcher.GenericPropertyMatchers.contains());
+            matcher.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains());
         }
         if (authUserVO.getStatus() != null) {
             req.setAccountNonLocked(authUserVO.getStatus());

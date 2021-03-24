@@ -1,14 +1,12 @@
 package com.inyaa.web.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <h1>RbasService</h1>
@@ -18,12 +16,14 @@ import java.util.Set;
  */
 
 @Service("rbacService")
+@Slf4j
 public class CustomRbacService {
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     public Boolean hasPerssion(HttpServletRequest request, Authentication authentication) {
         Object principal = authentication.getPrincipal();
+        log.debug("github认证=", principal);
         String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
@@ -31,22 +31,22 @@ public class CustomRbacService {
             username = principal.toString();
         }
 
-        boolean hasPerssion = false;
+        boolean hasPerssion = true;
 
-        if (StringUtils.hasText(username) && !"anonymousUser".equals(username)) {
-            //根据用户名查询用户资源权限，这里应该访问数据库查询
-            Set<String> uris = new HashSet<>();
-            for (String uri : uris) {
-                //验证用户拥有的资源权限是否与请求的资源相匹配
-                if (antPathMatcher.match(uri, request.getRequestURI())) {
-                    hasPerssion = true;
-                    break;
-                }
-            }
-
-            //暂时全部返回true
-            return true;
-        }
+//        if (StringUtils.hasText(username) && !"anonymousUser".equals(username)) {
+//            //根据用户名查询用户资源权限，这里应该访问数据库查询
+//            Set<String> uris = new HashSet<>();
+//            for (String uri : uris) {
+//                //验证用户拥有的资源权限是否与请求的资源相匹配
+//                if (antPathMatcher.match(uri, request.getRequestURI())) {
+//                    hasPerssion = true;
+//                    break;
+//                }
+//            }
+//
+//            //暂时全部返回true
+//            return true;
+//        }
 
         return hasPerssion;
     }
