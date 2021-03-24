@@ -1,6 +1,7 @@
 package com.inyaa.web.config;
 
 import com.inyaa.web.auth.dao.SysApiDao;
+import com.inyaa.web.auth.service.OauthUserService;
 import com.inyaa.web.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
@@ -43,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ResourceAccessDeniedHandler resourceAccessDeniedHandler;
     @Resource
     private SysApiDao sysApiDao;
+    @Resource
+    private OauthUserService oauthUserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -61,13 +64,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 ///所有路径都需要登录
                 .antMatchers("/").authenticated()
                 //需要具备相应的角色才能访问，这里返回的权限是scope，所以还是使用rbac验证吧
-                .antMatchers("/user/**", "/user2/**").hasAuthority("SCOPE_any")
+                //.antMatchers("/user/**", "/user2/**").hasAuthority("SCOPE_any")
                 //其它路径需要根据指定的方法判断是否有权限访问，基于权限管理模型认证
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
 
 
 
-        http.oauth2Login().defaultSuccessUrl("http://localhost:3000");
+        http.oauth2Login().defaultSuccessUrl("http://localhost:3000")
+                .userInfoEndpoint().userService(oauthUserService);
         http.oauth2Client();
         http.csrf().disable();
         http.exceptionHandling()
