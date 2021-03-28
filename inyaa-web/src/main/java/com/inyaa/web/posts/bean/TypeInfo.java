@@ -27,4 +27,7 @@ public class TypeInfo {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+
+    private String remark;
 }

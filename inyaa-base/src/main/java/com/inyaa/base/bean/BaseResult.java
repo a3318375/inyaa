@@ -15,7 +15,7 @@ public class BaseResult<R> {
     private R data;
 
     public static <R> BaseResult<R> success() {
-        return new BaseResult<R>().setSuccess(true).setErrorMessag("成功");
+        return new BaseResult<R>().setSuccess(true).setCode(200).setErrorMessag("成功");
     }
 
     public static <R> BaseResult<R> success(R data) {

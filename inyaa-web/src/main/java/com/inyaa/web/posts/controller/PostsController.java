@@ -37,6 +37,7 @@ public class PostsController {
 
     @GetMapping("/list")
     public BaseResult<Page<PostInfo>> list(PostInfoDto req) {
+        req.setPage(req.getPage() - 1);
         return postInfoService.list(req);
     }
 

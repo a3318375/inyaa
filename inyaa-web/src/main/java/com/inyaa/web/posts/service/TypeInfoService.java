@@ -6,6 +6,7 @@ import com.inyaa.web.posts.dao.TypeInfoDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class TypeInfoService {
     }
 
     public void save(TypeInfo typeInfo) {
+        typeInfo.setCreateTime(LocalDateTime.now());
         typeInfoDao.save(typeInfo);
     }
 }

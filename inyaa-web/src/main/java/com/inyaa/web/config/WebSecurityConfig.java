@@ -72,8 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
 
 
-
-        http.oauth2Login().defaultSuccessUrl("http://localhost:3000")
+        http.oauth2Login().defaultSuccessUrl("https://www.inyaa.cn")
                 .userInfoEndpoint().userService(oauthUserService);
         http.oauth2Client();
         http.logout().logoutSuccessHandler((req, resp, authentication) -> {
@@ -100,19 +99,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 interceptors = new ArrayList<>();
             }
             interceptors.add((request, body, execution) -> { //2 通过增加RestTemplate拦截器，让每次请求添加Bearer Token（Access Token）；ClientHttpRequestInterceptor是函数接口，可用Lambda表达式来实现
-                OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken)
-                        SecurityContextHolder.getContext().getAuthentication();
-                String clientRegistrationId = auth.getAuthorizedClientRegistrationId();
-                String principalName = auth.getName();
-                OAuth2AuthorizedClient client =
-                        oAuth2AuthorizedClientService.loadAuthorizedClient(clientRegistrationId, principalName); //3 OAuth2AuthorizedClientService可获得用户的OAuth2AuthorizedClient
-                if (client == null) {
-                    //如果客户端信息使用的是基于内存的InMemoryOAuth2AuthorizedClientService，则重启服务器就会失效，需要重新登录才能恢复，
-                    // 建议使用基于数据库的JdbcOAuth2AuthorizedClientService，本例使用的就是JdbcOAuth2AuthorizedClientService
-                    throw new CustomException(HttpStatus.NOT_ACCEPTABLE, "用户状态异常，请重新登录");
+                try {
+                    OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken)
+                            SecurityContextHolder.getContext().getAuthentication();
+                    String clientRegistrationId = auth.getAuthorizedClientRegistrationId();
+                    String principalName = auth.getName();
+                    OAuth2AuthorizedClient client =
+                            oAuth2AuthorizedClientService.loadAuthorizedClient(clientRegistrationId, principalName); //3 OAuth2AuthorizedClientService可获得用户的OAuth2AuthorizedClient
+                    if (client == null) {
+                        //如果客户端信息使用的是基于内存的InMemoryOAuth2AuthorizedClientService，则重启服务器就会失效，需要重新登录才能恢复，
+                        // 建议使用基于数据库的JdbcOAuth2AuthorizedClientService，本例使用的就是JdbcOAuth2AuthorizedClientService
+                        throw new CustomException(HttpStatus.NOT_ACCEPTABLE, "用户状态异常，请重新登录");
+                    }
+                    String accessToken = client.getAccessToken().getTokenValue(); //4 OAuth2AuthorizedClient可获得用户Access Token
+                    request.getHeaders().add("Authorization", "Bearer " + accessToken); //5 将Access Token通过头部的Bearer Token中访问Resource Server
+                } catch (Exception e) {
+                    log.error("添加请求头异常", e);
                 }
-                String accessToken = client.getAccessToken().getTokenValue(); //4 OAuth2AuthorizedClient可获得用户Access Token
-                request.getHeaders().add("Authorization", "Bearer " + accessToken); //5 将Access Token通过头部的Bearer Token中访问Resource Server
 
                 log.info(String.format("请求地址: %s", request.getURI()));
                 log.info(String.format("请求头信息: %s", request.getHeaders()));

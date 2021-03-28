@@ -14,10 +14,12 @@ logging:
 
 oauth2:
   server:
-    url: http://localhost:8080
+    url: http://122.51.60.92:30840
     logout: ${oauth2.server.url}/logout #可以实现单点登录，不能实现单点登出
     client-id: postman # 2 客户端ID
     client-secret: postman # 3 客户端密码
+  resource:
+    url: http://localhost:8081
 
 spring:
   application:
@@ -41,7 +43,7 @@ spring:
             authorization-grant-type: authorization_code # 4 认证类型
             #默认重定向URI模板是{baseUrl}/login/oauth2/code/{registrationId}。
             #registrationId是ClientRegistration的唯一标识符。
-            redirect-uri: http://localhost:8082/server/login/oauth2/code/inyaa  # 5 回调地址，需要配置到数据表中，默认写法，注意最后的路径是注册客户端名称
+            redirect-uri: http://122.51.60.92:32230/server/login/oauth2/code/inyaa  # 5 回调地址，需要配置到数据表中，默认写法，注意最后的路径是注册客户端名称
             scope: any #请求范围
             client-name: 客户端1
           github:
@@ -51,5 +53,5 @@ spring:
           inyaa:
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
-            user-info-uri: http://localhost:8081/userInfo # 9 获取用户信息地址，必须配置
+            user-info-uri: http://122.51.60.92:32756/userInfo # 9 获取用户信息地址，必须配置
             userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称

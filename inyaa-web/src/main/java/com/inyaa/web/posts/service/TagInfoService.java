@@ -6,6 +6,7 @@ import com.inyaa.web.posts.dao.TagInfoDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class TagInfoService {
     }
 
     public void save(TagInfo tagInfo) {
+        tagInfo.setCreateTime(LocalDateTime.now());
         tagInfoDao.save(tagInfo);
     }
 }
