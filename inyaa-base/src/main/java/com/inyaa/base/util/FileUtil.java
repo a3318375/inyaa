@@ -1,7 +1,11 @@
 package com.inyaa.base.util;
 
 import com.inyaa.base.enums.Constants;
+import com.upyun.RestManager;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,6 +18,7 @@ import java.util.UUID;
  * @Author:byteblogs
  * @Date:2018/09/27 12:52
  */
+@Slf4j
 public class FileUtil {
 
     /**
@@ -38,12 +43,12 @@ public class FileUtil {
         return UUID.randomUUID() + getSuffix(fileName);
     }
 
-    public static String getDefaultPath(String url){
-        if (StringUtils.isBlank(url)){
-            if (isWindows()){
+    public static String getDefaultPath(String url) {
+        if (StringUtils.isBlank(url)) {
+            if (isWindows()) {
                 return Constants.WIN_DEFAULT_PATH;
             } else {
-                return  Constants.OS_DEFAULT_PATH;
+                return Constants.OS_DEFAULT_PATH;
             }
         }
         return url;
@@ -56,6 +61,7 @@ public class FileUtil {
 
     /**
      * 根据文件路径将文件转为字节数组
+     *
      * @param filePath 文件路径
      * @return 字节数组
      */
@@ -63,8 +69,8 @@ public class FileUtil {
         byte[] data = null;
         URL url = null;
         InputStream input = null;
-        ByteArrayOutputStream output=null;
-        try{
+        ByteArrayOutputStream output = null;
+        try {
             url = new URL(filePath);
             HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
             httpUrl.connect();
@@ -77,13 +83,40 @@ public class FileUtil {
                 output.write(buf, 0, numBytesRead);
             }
             data = output.toByteArray();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if (output!=null){ try { output.close(); } catch (IOException e) { e.printStackTrace(); } }
-            if (input!=null){ try { input.close(); } catch (IOException e) { e.printStackTrace(); } }
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return data;
     }
 
+    public static String getUUID32() {
+        return UUID.randomUUID().toString().replace("-", "").toLowerCase();
+
+    }
+
+    public static Response uploadByUpai(MultipartFile file) {
+        try {
+            RestManager manager = new RestManager("inyaa", "yuxhtest", "JWCKAeRxzO4iRsylqCxOzrlbS3I21zGB");
+            String filename = file.getOriginalFilename();
+            return manager.writeFile("/cover/" + getUUID32() + filename.substring(filename.indexOf(".")), file.getInputStream(), null);
+        }catch (Exception e){
+            log.error("图片上传异常", e);
+            return null;
+        }
+    }
 }
