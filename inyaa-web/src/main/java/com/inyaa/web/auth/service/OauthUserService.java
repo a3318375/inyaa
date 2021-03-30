@@ -3,7 +3,7 @@ package com.inyaa.web.auth.service;
 import com.inyaa.web.auth.bean.UserInfo;
 import com.inyaa.web.auth.bean.UserRole;
 import com.inyaa.web.auth.dao.RoleInfoRepository;
-import com.inyaa.web.auth.dao.UserInfoRepository;
+import com.inyaa.web.auth.dao.UserInfoDao;
 import com.inyaa.web.auth.dao.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OauthUserService extends DefaultOAuth2UserService {
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserInfoDao userInfoDao;
 
     private final RoleInfoRepository roleInfoRepository;
 
@@ -35,7 +35,7 @@ public class OauthUserService extends DefaultOAuth2UserService {
         OAuth2User user = super.loadUser(oAuth2UserRequest);
         if ("github".equals(oAuth2UserRequest.getClientRegistration().getRegistrationId())) {
             Map<String, Object> attributes = user.getAttributes();
-            UserInfo userInfo = userInfoRepository.getByUsername(String.valueOf(attributes.get("id")));
+            UserInfo userInfo = userInfoDao.getByUsername(String.valueOf(attributes.get("id")));
             if (userInfo == null) {
                 userInfo = new UserInfo();
                 userInfo.setAccountNonLocked(true);
@@ -45,7 +45,7 @@ public class OauthUserService extends DefaultOAuth2UserService {
                 userInfo.setAvatar(String.valueOf(attributes.get("avatar_url")));
                 userInfo.setUsername(String.valueOf(attributes.get("id")));
                 userInfo.setName(String.valueOf(attributes.get("login")));
-                userInfoRepository.save(userInfo);
+                userInfoDao.save(userInfo);
             }
             List<String> roleList = roleInfoRepository.findRoleKeyByUserId(userInfo.getId());
             if (roleList.size() < 1) {

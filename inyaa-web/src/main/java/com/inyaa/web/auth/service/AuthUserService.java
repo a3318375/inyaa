@@ -3,14 +3,18 @@ package com.inyaa.web.auth.service;
 import com.inyaa.base.bean.BaseResult;
 import com.inyaa.base.enums.RoleEnum;
 import com.inyaa.web.auth.bean.UserInfo;
-import com.inyaa.web.auth.dao.UserInfoRepository;
+import com.inyaa.web.auth.dao.RoleInfoRepository;
+import com.inyaa.web.auth.dao.UserInfoDao;
 import com.inyaa.web.auth.vo.AuthUserVO;
+import com.inyaa.web.auth.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author byteblogs
@@ -20,10 +24,11 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class AuthUserService {
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserInfoDao userInfoDao;
+    private final RoleInfoRepository roleInfoRepository;
 
     public BaseResult<AuthUserVO> getUserInfo(String username) {
-        UserInfo userInfo = userInfoRepository.getByUsername(username);
+        UserInfo userInfo = userInfoDao.getByUsername(username);
         if (userInfo.getRoleId() == null) {
             userInfo.setRoleId(1);
         }
@@ -37,7 +42,7 @@ public class AuthUserService {
     }
 
     public BaseResult<AuthUserVO> getMasterUserInfo() {
-        UserInfo userInfo = userInfoRepository.getByRoleId(RoleEnum.ADMIN.getRoleId());
+        UserInfo userInfo = userInfoDao.getByRoleId(RoleEnum.ADMIN.getRoleId());
         AuthUserVO authUserVO = new AuthUserVO();
         if (userInfo != null) {
             authUserVO.setName(userInfo.getName())
@@ -59,17 +64,33 @@ public class AuthUserService {
             req.setAccountNonLocked(authUserVO.getStatus());
         }
         Example<UserInfo> ex = Example.of(req, matcher);
-        Page<UserInfo> records = userInfoRepository.findAll(ex, page);
+        Page<UserInfo> records = userInfoDao.findAll(ex, page);
         return BaseResult.success(records);
     }
 
     public BaseResult<String> deleteUsers(Integer id) {
-        userInfoRepository.deleteById(id);
+        userInfoDao.deleteById(id);
         return BaseResult.success();
     }
 
     public BaseResult<String> register(UserInfo userInfo) {
-        userInfoRepository.save(userInfo);
+        userInfoDao.save(userInfo);
         return BaseResult.success();
+    }
+
+    public BaseResult<String> save(UserInfo userInfo) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        userInfoDao.save(userInfo);
+        return BaseResult.success();
+    }
+
+    public BaseResult<String> delete(UserInfo userInfo) {
+        userInfoDao.deleteById(userInfo.getId());
+        return BaseResult.success();
+    }
+
+    public BaseResult<List<UserVo>> list(UserInfo userInfo) {
+        return BaseResult.success(userInfoDao.findUserList());
     }
 }

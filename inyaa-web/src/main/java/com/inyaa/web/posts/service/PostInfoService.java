@@ -39,6 +39,7 @@ public class PostInfoService {
         BeanUtils.copyProperties(dto, info);
         postInfoDao.save(info);
 
+        postArticleDao.deleteByPostId(info.getId());
         PostArticle pa = new PostArticle();
         pa.setPostId(info.getId());
         pa.setContext(dto.getContext());

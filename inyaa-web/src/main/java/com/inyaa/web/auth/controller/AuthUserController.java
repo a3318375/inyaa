@@ -5,6 +5,7 @@ import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.auth.bean.UserInfo;
 import com.inyaa.web.auth.service.AuthUserService;
 import com.inyaa.web.auth.vo.AuthUserVO;
+import com.inyaa.web.auth.vo.UserVo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -72,6 +74,20 @@ public class AuthUserController {
         }
     }
 
+    @GetMapping("/list")
+    public BaseResult<List<UserVo>> list(UserInfo userInfo) {
+        return authUserService.list(userInfo);
+    }
+
+    @PostMapping("/save")
+    public BaseResult<String> save(@RequestBody UserInfo userInfo) {
+        return authUserService.save(userInfo);
+    }
+
+    @PostMapping("/delete")
+    public BaseResult<String> delete(@RequestBody UserInfo userInfo) {
+        return authUserService.delete(userInfo);
+    }
     @GetMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
         return Collections.singletonMap("name", principal.getAttribute("name"));

@@ -1,22 +1,18 @@
-package com.inyaa.web.auth.bean;
+package com.inyaa.web.auth.vo;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * @author: yuxh
+ * @date: 2021/3/31 0:06
+ */
 @Data
-@Entity
-@Table(name = "sys_user")
-@Accessors(chain = true)
-public class UserInfo {
+public class UserVo {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-
     private String username; // 用户名
     private String password; // 密码
     private String name;// 姓名
@@ -33,5 +29,6 @@ public class UserInfo {
     private boolean enabled; // 账号是否可用
     private String remark; //备注
     private LocalDateTime createTime;
+    private String roleName;
 
 }

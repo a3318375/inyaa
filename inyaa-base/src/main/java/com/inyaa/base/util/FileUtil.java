@@ -109,11 +109,10 @@ public class FileUtil {
 
     }
 
-    public static Response uploadByUpai(MultipartFile file) {
+    public static Response uploadByUpai(MultipartFile file, String newname) {
         try {
             RestManager manager = new RestManager("inyaa", "yuxhtest", "JWCKAeRxzO4iRsylqCxOzrlbS3I21zGB");
-            String filename = file.getOriginalFilename();
-            return manager.writeFile("/cover/" + getUUID32() + filename.substring(filename.indexOf(".")), file.getInputStream(), null);
+            return manager.writeFile(newname, file.getInputStream(), null);
         }catch (Exception e){
             log.error("图片上传异常", e);
             return null;

@@ -17,4 +17,7 @@ public interface PostArticleDao extends JpaRepository<PostArticle, Integer> {
 
     @Query("select u.context from PostArticle u where u.postId = ?1")
     String getContextByPostId(Integer id);
+
+    @Query("delete from PostArticle u where u.postId = ?1")
+    void deleteByPostId(Integer id);
 }

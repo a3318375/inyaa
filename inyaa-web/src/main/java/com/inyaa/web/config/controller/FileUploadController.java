@@ -27,10 +27,12 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public BaseResult<String> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        Response resp = FileUtil.uploadByUpai(file);
+        String filename = file.getOriginalFilename();
+        String saveName = "/cover/" + FileUtil.getUUID32() + filename.substring(filename.indexOf("."));
+        Response resp = FileUtil.uploadByUpai(file, saveName);
         if (resp != null && resp.isSuccessful()) {
             assert resp.body() != null;
-            sysFileService.save(resp.body().string(), 0);
+            sysFileService.save("https://media.inyaa.cn" + saveName, 0);
             return BaseResult.success();
         } else {
             return BaseResult.error();
