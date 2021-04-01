@@ -19,7 +19,7 @@ oauth2:
     client-id: postman # 2 客户端ID
     client-secret: postman # 3 客户端密码
   resource:
-    url: http://localhost:8081
+    url: http://122.51.60.92:32756
 
 spring:
   servlet:
