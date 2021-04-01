@@ -2,7 +2,7 @@ package com.inyaa.web.auth.service;
 
 import com.inyaa.web.auth.bean.UserInfo;
 import com.inyaa.web.auth.bean.UserRole;
-import com.inyaa.web.auth.dao.RoleInfoRepository;
+import com.inyaa.web.auth.dao.RoleInfoDao;
 import com.inyaa.web.auth.dao.UserInfoDao;
 import com.inyaa.web.auth.dao.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class OauthUserService extends DefaultOAuth2UserService {
 
     private final UserInfoDao userInfoDao;
 
-    private final RoleInfoRepository roleInfoRepository;
+    private final RoleInfoDao roleInfoDao;
 
     private final UserRoleRepository userRoleRepository;
 
@@ -47,7 +47,7 @@ public class OauthUserService extends DefaultOAuth2UserService {
                 userInfo.setName(String.valueOf(attributes.get("login")));
                 userInfoDao.save(userInfo);
             }
-            List<String> roleList = roleInfoRepository.findRoleKeyByUserId(userInfo.getId());
+            List<String> roleList = roleInfoDao.findRoleKeyByUserId(userInfo.getId());
             if (roleList.size() < 1) {
                 UserRole ur = new UserRole();
                 ur.setUserId(userInfo.getId());

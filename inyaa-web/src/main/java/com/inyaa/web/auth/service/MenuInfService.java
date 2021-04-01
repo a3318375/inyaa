@@ -22,9 +22,11 @@ public class MenuInfService {
 
     private final SysMenuDao sysMenuDao;
 
-    private List<SysMenu> findMenuList(Integer pid) {
+    private List<SysMenu> findMenuList(Integer pid, int enable) {
         SysMenu user = new SysMenu();
-        user.setOpen(1);
+        if (enable == 1) {
+            user.setEnable(1);
+        }
         user.setPid(pid);
         ExampleMatcher matcher = ExampleMatcher.matching();
         Example<SysMenu> ex = Example.of(user, matcher);
@@ -32,24 +34,32 @@ public class MenuInfService {
         return sysMenuDao.findAll(ex, sort);
     }
 
-    private List<MenuVo> findMenuList(List<SysMenu> list) {
+    private List<MenuVo> findMenuList(List<SysMenu> list, int enable) {
         List<MenuVo> menuVOS = new ArrayList<>();
         list.forEach(menuInfo -> {
             MenuVo vo = new MenuVo();
             vo.setName(menuInfo.getName())
                     .setPath(menuInfo.getPath())
-                    .setCode(menuInfo.getCode())
+                    .setPermission(menuInfo.getPermission())
                     .setIcon(menuInfo.getIcon());
-            List<SysMenu> chindres = findMenuList(menuInfo.getId());
+            List<SysMenu> chindres = findMenuList(menuInfo.getId(), enable);
             if (chindres.size() > 0) {
-                vo.setChildren(findMenuList(chindres));
+                vo.setChildren(findMenuList(chindres, enable));
             }
             menuVOS.add(vo);
         });
         return menuVOS;
     }
 
-    public List<MenuVo> findMenuList() {
-        return findMenuList(findMenuList(0));
+    public List<MenuVo> findMenuList(int enable) {
+        return findMenuList(findMenuList(0, enable), enable);
+    }
+
+    public void delete(SysMenu sysMenu) {
+        sysMenuDao.deleteById(sysMenu.getId());
+    }
+
+    public void save(SysMenu sysMenu) {
+        sysMenuDao.save(sysMenu);
     }
 }

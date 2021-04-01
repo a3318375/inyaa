@@ -1,12 +1,11 @@
 package com.inyaa.web.controller;
 
 import com.inyaa.base.bean.BaseResult;
+import com.inyaa.web.auth.bean.SysMenu;
 import com.inyaa.web.auth.service.MenuInfService;
 import com.inyaa.web.auth.vo.MenuVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +22,23 @@ public class MenuController {
 
     @GetMapping("/list")
     public BaseResult<List<MenuVo>> list(){
-        return BaseResult.success(menuInfService.findMenuList());
+        return BaseResult.success(menuInfService.findMenuList(1));
+    }
+
+    @GetMapping("/admin/list")
+    public BaseResult<List<MenuVo>> adminList(){
+        return BaseResult.success(menuInfService.findMenuList(0));
+    }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public BaseResult<String> save(@RequestBody SysMenu sysMenu) {
+        menuInfService.save(sysMenu);
+        return BaseResult.success();
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public BaseResult<String> delete(@RequestBody SysMenu sysMenu) {
+        menuInfService.delete(sysMenu);
+        return BaseResult.success();
     }
 }

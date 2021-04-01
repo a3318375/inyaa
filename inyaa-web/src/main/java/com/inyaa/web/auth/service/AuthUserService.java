@@ -3,7 +3,6 @@ package com.inyaa.web.auth.service;
 import com.inyaa.base.bean.BaseResult;
 import com.inyaa.base.enums.RoleEnum;
 import com.inyaa.web.auth.bean.UserInfo;
-import com.inyaa.web.auth.dao.RoleInfoRepository;
 import com.inyaa.web.auth.dao.UserInfoDao;
 import com.inyaa.web.auth.vo.AuthUserVO;
 import com.inyaa.web.auth.vo.UserVo;
@@ -25,7 +24,6 @@ import java.util.List;
 public class AuthUserService {
 
     private final UserInfoDao userInfoDao;
-    private final RoleInfoRepository roleInfoRepository;
 
     public BaseResult<AuthUserVO> getUserInfo(String username) {
         UserInfo userInfo = userInfoDao.getByUsername(username);

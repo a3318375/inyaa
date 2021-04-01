@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface RoleInfoRepository extends JpaRepository<RoleInfo, Integer> {
+public interface RoleInfoDao extends JpaRepository<RoleInfo, Integer> {
 
     @Query(value = "select role_key from sys_role where id in (select role_id from sys_user_role where user_id = ?1)", nativeQuery = true)
     List<String> findRoleKeyByUserId(Integer userId);

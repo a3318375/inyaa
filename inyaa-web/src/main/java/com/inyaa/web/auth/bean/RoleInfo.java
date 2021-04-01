@@ -2,24 +2,23 @@ package com.inyaa.web.auth.bean;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name="inyaa_sys_role")
+@Table(name="sys_role")
 public class RoleInfo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
     private String roleName;
 
     private String roleKey;
 
-    private String description;
+    private String remark;
 
+    private LocalDateTime createTime;
 }
