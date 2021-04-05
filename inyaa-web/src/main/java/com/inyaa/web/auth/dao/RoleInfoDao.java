@@ -10,4 +10,7 @@ public interface RoleInfoDao extends JpaRepository<RoleInfo, Integer> {
 
     @Query(value = "select role_key from sys_role where id in (select role_id from sys_user_role where user_id = ?1)", nativeQuery = true)
     List<String> findRoleKeyByUserId(Integer userId);
+
+    @Query("select roleKey from RoleInfo where id in (select roleId from RolePermission where permissionId = ?1)")
+    List<String> findRoleKeyList(Integer id);
 }

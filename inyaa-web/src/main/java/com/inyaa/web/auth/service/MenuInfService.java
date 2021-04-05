@@ -9,6 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +61,10 @@ public class MenuInfService {
     }
 
     public void save(SysMenu sysMenu) {
+        if (sysMenu.getPid() == null) {
+            sysMenu.setPid(0);
+        }
+        sysMenu.setCreateTime(LocalDateTime.now());
         sysMenuDao.save(sysMenu);
     }
 }

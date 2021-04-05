@@ -10,18 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@RestController
+@Controller
 public class LoginController {
 
     private final RestTemplate restTemplate;
@@ -51,6 +51,11 @@ public class LoginController {
         } else {
             return BaseResult.error(resp.getStatusCodeValue(), Objects.requireNonNull(resp.getBody()).getString("error_description"));
         }
+    }
+
+    @RequestMapping("/view")
+    public String view(){
+        return "redirect:http://localhost:3100/#/home/welcome";
     }
 
     /**

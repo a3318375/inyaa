@@ -3,6 +3,7 @@ package com.inyaa.web.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 
@@ -23,10 +24,11 @@ public class CustomRbacService {
 
     public Boolean hasPerssion(HttpServletRequest request, Authentication authentication) {
         Object principal = authentication.getPrincipal();
-        log.debug("github认证=", principal);
         String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
+        }else if (principal instanceof DefaultOAuth2User) {
+            username = ((DefaultOAuth2User) principal).getName();
         } else {
             username = principal.toString();
         }

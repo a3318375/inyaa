@@ -5,6 +5,7 @@ import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.auth.dao.SysApiDao;
 import com.inyaa.web.auth.service.OauthUserService;
 import com.inyaa.web.exception.CustomException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.access.event.LoggerListener;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,9 +26,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +41,15 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Resource
-    private AuthenticationEntryPoint authenticationEntryPoint;
-    @Resource
-    private ResourceAccessDeniedHandler resourceAccessDeniedHandler;
-    @Resource
-    private SysApiDao sysApiDao;
-    @Resource
-    private OauthUserService oauthUserService;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final ResourceAccessDeniedHandler resourceAccessDeniedHandler;
+    private final SysApiDao sysApiDao;
+    private final OauthUserService oauthUserService;
+    private final ApiAccessDecisionManager apiAccessDecisionManager;
+    private final InyaaFilterInvocationSecurityMetadataSource inyaaFilterInvocationSecurityMetadataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,14 +66,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //不需要登录就可以访问
                 .mvcMatchers(urls).permitAll()
                 ///所有路径都需要登录
-                .antMatchers("/").authenticated()
-                //需要具备相应的角色才能访问，这里返回的权限是scope，所以还是使用rbac验证吧
-                //.antMatchers("/user/**", "/user2/**").hasAuthority("SCOPE_any")
-                //其它路径需要根据指定的方法判断是否有权限访问，基于权限管理模型认证
-                .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
+                .anyRequest().authenticated().withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+            @Override
+            public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                o.setSecurityMetadataSource(inyaaFilterInvocationSecurityMetadataSource);
+                o.setAccessDecisionManager(apiAccessDecisionManager);
+                return o;
+            }
+        });
 
 
-        http.oauth2Login().defaultSuccessUrl("https://www.inyaa.cn")
+        http.oauth2Login().defaultSuccessUrl("http://localhost:8080/")
                 .userInfoEndpoint().userService(oauthUserService);
         http.oauth2Client();
         http.logout().logoutSuccessHandler((req, resp, authentication) -> {

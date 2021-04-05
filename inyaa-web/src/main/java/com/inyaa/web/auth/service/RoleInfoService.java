@@ -28,4 +28,12 @@ public class RoleInfoService {
     public List<RoleInfo> list() {
         return roleInfoDao.findAll();
     }
+
+    public RoleInfo getById(Integer roleId) {
+        return roleInfoDao.getOne(roleId);
+    }
+
+    public List<String> findRoleKeyList(Integer id) {
+        return roleInfoDao.findRoleKeyList(id);
+    }
 }
