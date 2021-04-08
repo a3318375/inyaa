@@ -44,4 +44,10 @@ public class FileUploadController {
         List<SysFile> list = sysFileService.findAll();
         return BaseResult.success(list);
     }
+
+    @GetMapping("/get")
+    public BaseResult<SysFile> get(int type) {
+        SysFile file = sysFileService.getRandImg(type);
+        return BaseResult.success(file);
+    }
 }

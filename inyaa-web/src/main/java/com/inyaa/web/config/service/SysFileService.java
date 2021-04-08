@@ -29,4 +29,8 @@ public class SysFileService {
     public List<SysFile> findAll() {
         return sysFileDao.findAll();
     }
+
+    public SysFile getRandImg(int type) {
+        return sysFileDao.getRandImg(type);
+    }
 }
