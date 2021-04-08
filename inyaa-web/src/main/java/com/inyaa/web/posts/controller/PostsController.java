@@ -44,6 +44,7 @@ public class PostsController {
     @GetMapping("/weight/list")
     public BaseResult<Page<PostInfo>> weight(PostInfoDto req) {
         req.setWeight(1);
+        req.setPage(req.getPage() - 1);
         return postInfoService.list(req);
     }
 
