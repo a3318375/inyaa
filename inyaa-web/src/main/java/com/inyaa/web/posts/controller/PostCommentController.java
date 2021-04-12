@@ -5,9 +5,7 @@ import com.inyaa.web.posts.bean.PostComment;
 import com.inyaa.web.posts.service.PostCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author: yuxh
@@ -25,4 +23,9 @@ public class PostCommentController {
         return postCommentService.list(req);
     }
 
+    @PostMapping("/save")
+    public BaseResult<String> save(@RequestBody PostComment req) {
+        postCommentService.save(req);
+        return BaseResult.success();
+    }
 }

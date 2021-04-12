@@ -15,19 +15,24 @@ public class PostComment extends BaseVo {
     private Integer id;
 
     /**
-     * 用户id，逐渐
+     * 用户id
      */
     private Integer userId;
+
+    /**
+     * 评论的目标用户id
+     */
+    private Integer toUserId;
+
+    /**
+     * 0-评论博客，1-评论用户
+     */
+    private Integer type;
 
     /**
      * 评论内容
      */
     private String content;
-
-    /**
-     * 父id
-     */
-    private Integer pid;
 
     /**
      * 文章id

@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date: 2021/3/5 21:28
  */
 public interface PostCommentDao extends JpaRepository<PostComment, Integer> {
+
 }
