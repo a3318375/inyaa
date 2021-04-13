@@ -10,7 +10,6 @@ import okhttp3.Response;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,14 +25,24 @@ public class FileUploadController {
     private final SysFileService sysFileService;
 
     @PostMapping("/upload")
-    public BaseResult<String> upload(@RequestParam("file") MultipartFile file) throws IOException {
+    public BaseResult<String> upload(@RequestParam("file") MultipartFile file) {
+        return uploadFile(file, 0);
+    }
+
+    @PostMapping("/cover/upload")
+    public BaseResult<String> cover(@RequestParam("file") MultipartFile file) {
+        return uploadFile(file, 3);
+    }
+
+    private BaseResult<String> uploadFile(MultipartFile file,Integer type) {
         String filename = file.getOriginalFilename();
         String saveName = "/cover/" + FileUtil.getUUID32() + filename.substring(filename.indexOf("."));
         Response resp = FileUtil.uploadByUpai(file, saveName);
         if (resp != null && resp.isSuccessful()) {
             assert resp.body() != null;
-            sysFileService.save("https://media.inyaa.cn" + saveName, 0);
-            return BaseResult.success();
+            String url = "https://media.inyaa.cn" + saveName;
+            sysFileService.save(url, type);
+            return BaseResult.success(url);
         } else {
             return BaseResult.error();
         }

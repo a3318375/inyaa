@@ -3,6 +3,7 @@ package com.inyaa.web.posts.dao;
 
 import com.inyaa.web.posts.bean.PostArticle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -18,6 +19,7 @@ public interface PostArticleDao extends JpaRepository<PostArticle, Integer> {
     @Query("select u.context from PostArticle u where u.postId = ?1")
     String getContextByPostId(Integer id);
 
+    @Modifying
     @Query("delete from PostArticle u where u.postId = ?1")
     void deleteByPostId(Integer id);
 }
