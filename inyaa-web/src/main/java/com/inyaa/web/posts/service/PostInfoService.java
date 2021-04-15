@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,6 +27,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostInfoService {
 
     private final PostInfoDao postInfoDao;
@@ -74,6 +76,8 @@ public class PostInfoService {
 
     public void delete(int id) {
         postInfoDao.deleteById(id);
+        postArticleDao.deleteByPostId(id);
+        postTagDao.deleteByPostId(id);
     }
 
     public BaseResult<Map<String, Map<String, List<PostInfo>>>> archive() {

@@ -76,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         });
 
 
-        http.oauth2Login().defaultSuccessUrl("http://122.51.60.92:8080/")
+        http.oauth2Login().defaultSuccessUrl("https://oauth.inyaa.cn")
                 .userInfoEndpoint().userService(oauthUserService);
         http.oauth2Client();
         http.logout().logoutSuccessHandler((req, resp, authentication) -> {
