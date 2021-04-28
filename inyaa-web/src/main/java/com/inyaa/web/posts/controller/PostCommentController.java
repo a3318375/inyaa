@@ -20,6 +20,7 @@ public class PostCommentController {
 
     @GetMapping("/list")
     public BaseResult<Page<PostComment>> list(PostComment req) {
+        req.setPage(req.getPage() - 1);
         return postCommentService.list(req);
     }
 
