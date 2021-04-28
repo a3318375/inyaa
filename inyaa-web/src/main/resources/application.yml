@@ -58,9 +58,23 @@ spring:
             client-id: e6e6a9b66c052a99a288 # 2 客户端ID
             client-secret: 93129918b0aae5b8dcc41656dda70bab04e94527 # 3 客户端密码
             redirect-uri: https://www.inyaa.cn/server/login/oauth2/code/github
+          qq:
+            clientId: 101942482
+            clientSecret: 29a108a760911901769358dc5c1c8c95
+            # 在本地测试时需要配置代理将自己在qq注册的redirectUri重定向为http://localhost/api/login/oauth2/code/qq
+            redirectUri: https://www.inyaa.cn/api/login/oauth2/code/qq
+            authorizationGrantType: authorization_code
+            # 授权码模式需要传递code、state、client_id、client_secret等参数，OAuth2AuthorizationCodeGrantRequestEntityConverter
+            # 会根据当前的认证方式传递不同的参数
+            clientAuthenticationMethod: post
         provider:
           inyaa:
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
             user-info-uri: https://resource.inyaa.cn/userInfo # 9 获取用户信息地址，必须配置
             userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
+          qq:
+            authorizationUri: https://graph.qq.com/oauth2.0/authorize
+            tokenUri: https://graph.qq.com/oauth2.0/token
+            userInfoUri: https://graph.qq.com/user/get_user_info
+            userNameAttribute: nickname
