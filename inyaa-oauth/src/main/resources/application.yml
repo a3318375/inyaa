@@ -1,5 +1,9 @@
 server:
   port: 8080
+  servlet:
+    #不能配置为/，否则认证通过后不能重定向回客户端的访问地址
+    context-path: /oauth
+
 spring:
   application:
     name: inyaa-oauth

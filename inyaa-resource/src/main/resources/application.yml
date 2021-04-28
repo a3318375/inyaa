@@ -1,7 +1,10 @@
-
 #资源服务器端口号
 server:
   port: 8081
+  servlet:
+    #不能配置为/，否则认证通过后不能重定向回客户端的访问地址
+    context-path: /resource
+
 spring:
   application:
     name: inyaa-resource
@@ -15,5 +18,5 @@ spring:
           # public-key-location: classpath:oauth2_key.pub
 
           # 认证服务器提供的密钥验证路径，这种方式每次验证access_token都需要访问认证服务器
-          jwk-set-uri: http://localhost:8080/.well-known/jwks.json
+          jwk-set-uri: https://www.inyaa.cn/oauth/.well-known/jwks.json
 

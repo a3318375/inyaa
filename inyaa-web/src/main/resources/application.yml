@@ -14,12 +14,12 @@ logging:
 
 oauth2:
   server:
-    url: https://oauth.inyaa.cn
+    url: https://www.inyaa.cn/oauth
     logout: ${oauth2.server.url}/logout #可以实现单点登录，不能实现单点登出
     client-id: postman # 2 客户端ID
     client-secret: postman # 3 客户端密码
   resource:
-    url: https://resource.inyaa.cn
+    url: https://www.inyaa.cn/resource
 
 spring:
   servlet:
@@ -71,7 +71,7 @@ spring:
           inyaa:
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
-            user-info-uri: https://resource.inyaa.cn/userInfo # 9 获取用户信息地址，必须配置
+            user-info-uri: https://www.inyaa.cn/resource/userInfo # 9 获取用户信息地址，必须配置
             userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
           qq:
             authorizationUri: https://graph.qq.com/oauth2.0/authorize

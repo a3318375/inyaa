@@ -96,7 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.oauth2Login(oauth2LoginConfigurer -> oauth2LoginConfigurer
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(oAuth2AccessTokenResponseClient()))
-                .defaultSuccessUrl("https://oauth.inyaa.cn")
+                .defaultSuccessUrl("https://www.inyaa.cn/oauth")
                 .userInfoEndpoint().userService(oauthUserService)
         );
 
