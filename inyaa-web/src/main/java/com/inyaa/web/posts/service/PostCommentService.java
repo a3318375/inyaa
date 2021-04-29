@@ -44,7 +44,7 @@ public class PostCommentService {
             postComment.setName(userInfo.getName());
             postComment.setAvatar(userInfo.getAvatar());
         }
-        if (postComment.getUserId() != null) {
+        if (postComment.getToUserId() != null) {
             UserInfo toUserInfo = authUserService.getUserById(postComment.getToUserId());
             postComment.setToUserName(toUserInfo.getName());
             postComment.setToUserAvatar(toUserInfo.getAvatar());
