@@ -1,11 +1,16 @@
 package com.inyaa.web.posts.service;
 
 import com.inyaa.base.bean.BaseResult;
+import com.inyaa.web.auth.bean.UserInfo;
+import com.inyaa.web.auth.service.AuthUserService;
 import com.inyaa.web.posts.bean.PostComment;
 import com.inyaa.web.posts.dao.PostCommentDao;
+import com.inyaa.web.posts.vo.PostCommentVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: yuxh
@@ -16,14 +21,34 @@ import org.springframework.stereotype.Service;
 public class PostCommentService {
 
     private final PostCommentDao postCommentDao;
+    private final AuthUserService authUserService;
 
-    public BaseResult<Page<PostComment>> list(PostComment req) {
-        Sort sort = Sort.by("createTime").descending();
-        Pageable page = PageRequest.of(req.getPage(), req.getSize(), sort);
+    public BaseResult<Page<PostCommentVO>> list(PostComment req) {
+        req.setType(0);
+        Page<PostCommentVO> list = postCommentDao.findPostCommentListPage(req);
+        for (PostCommentVO postComment : list.getContent()) {
+            setUserInfo(postComment);
 
-        Example<PostComment> example = Example.of(req);
-        Page<PostComment> list = postCommentDao.findAll(example, page);
+            PostComment params = new PostComment();
+            params.setPostId(req.getPostId());
+            params.setType(1);
+            List<PostCommentVO> childList = postCommentDao.findPostCommentList(params);
+            childList.forEach(this::setUserInfo);
+        }
         return BaseResult.success(list);
+    }
+
+    private void setUserInfo(PostCommentVO postComment) {
+        if (postComment.getUserId() != null) {
+            UserInfo userInfo = authUserService.getUserById(postComment.getUserId());
+            postComment.setName(userInfo.getName());
+            postComment.setAvatar(userInfo.getAvatar());
+        }
+        if (postComment.getUserId() != null) {
+            UserInfo toUserInfo = authUserService.getUserById(postComment.getToUserId());
+            postComment.setToUserName(toUserInfo.getName());
+            postComment.setToUserAvatar(toUserInfo.getAvatar());
+        }
     }
 
     public void save(PostComment req) {

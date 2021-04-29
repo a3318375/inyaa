@@ -91,4 +91,8 @@ public class AuthUserService {
     public BaseResult<List<UserVo>> list(UserInfo userInfo) {
         return BaseResult.success(userInfoDao.findUserList());
     }
+
+    public UserInfo getUserById(Integer userId) {
+        return userInfoDao.getOne(userId);
+    }
 }
