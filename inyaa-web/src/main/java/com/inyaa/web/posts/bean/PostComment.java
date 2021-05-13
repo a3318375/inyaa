@@ -30,6 +30,11 @@ public class PostComment extends BaseVo {
     private Integer type;
 
     /**
+     * 评论的父节点id
+     */
+    private Integer pid;
+
+    /**
      * 评论内容
      */
     private String content;
@@ -37,7 +42,7 @@ public class PostComment extends BaseVo {
     /**
      * 文章id
      */
-    private Long postId;
+    private Integer postId;
 
     /**
      * 回复时间

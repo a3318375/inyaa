@@ -51,6 +51,7 @@ public class PostCommentDslDaoImpl implements PostCommentDslDao {
                         qBean.createTime)).from(qBean);
         jpaQuery.where(qBean.postId.eq(req.getPostId()));
         jpaQuery.where(qBean.type.eq(req.getType()));
+        jpaQuery.where(qBean.pid.eq(req.getPid()));
         jpaQuery.orderBy(qBean.createTime.desc());
         return jpaQuery.fetch();
     }

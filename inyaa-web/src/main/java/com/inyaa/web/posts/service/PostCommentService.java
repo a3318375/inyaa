@@ -7,10 +7,8 @@ import com.inyaa.web.posts.bean.PostComment;
 import com.inyaa.web.posts.dao.PostCommentDao;
 import com.inyaa.web.posts.vo.PostCommentVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author: yuxh
@@ -24,17 +22,8 @@ public class PostCommentService {
     private final AuthUserService authUserService;
 
     public BaseResult<Page<PostCommentVO>> list(PostComment req) {
-        req.setType(0);
         Page<PostCommentVO> list = postCommentDao.findPostCommentListPage(req);
-        for (PostCommentVO postComment : list.getContent()) {
-            setUserInfo(postComment);
-
-            PostComment params = new PostComment();
-            params.setPostId(req.getPostId());
-            params.setType(1);
-            List<PostCommentVO> childList = postCommentDao.findPostCommentList(params);
-            childList.forEach(this::setUserInfo);
-        }
+        list.getContent().forEach(this::setUserInfo);
         return BaseResult.success(list);
     }
 

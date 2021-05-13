@@ -3,6 +3,7 @@ package com.inyaa.web.posts.controller;
 import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.posts.bean.TagInfo;
 import com.inyaa.web.posts.service.TagInfoService;
+import com.inyaa.web.posts.vo.TagVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,11 @@ public class TagController {
     @GetMapping("/list")
     public BaseResult<List<TagInfo>> list() {
         return tagInfoService.list();
+    }
+
+    @GetMapping("/article/list")
+    public BaseResult<List<TagVo>> articleList() {
+        return tagInfoService.articleList();
     }
 
     @PostMapping("/delete")

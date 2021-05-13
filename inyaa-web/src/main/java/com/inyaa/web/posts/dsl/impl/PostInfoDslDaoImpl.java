@@ -69,7 +69,7 @@ public class PostInfoDslDaoImpl implements PostInfoDslDao {
     @Override
     public List<PostArchiveVo> findArchiveList() {
         QPostInfo qBean = QPostInfo.postInfo;
-        StringTemplate dateFmt = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m')", qBean.createTime);
+        StringTemplate dateFmt = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m-01 00:00:00')", qBean.createTime);
         JPAQuery<PostArchiveVo> jpaQuery = jpaQueryFactory
                 .select(Projections.bean(PostArchiveVo.class, dateFmt.as("archiveDate")))
                 .from(qBean)
@@ -81,11 +81,12 @@ public class PostInfoDslDaoImpl implements PostInfoDslDao {
     @Override
     public List<PostInfo> findByArchiveDate(String archiveDate) {
         QPostInfo qBean = QPostInfo.postInfo;
-        StringTemplate dateFmt = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m')", qBean.createTime);
+        StringTemplate dateFmt = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m-01 00:00:00')", qBean.createTime);
+        StringTemplate req = Expressions.stringTemplate("DATE_FORMAT({0},'%Y-%m-01 00:00:00')", archiveDate);
         JPAQuery<PostInfo> jpaQuery = jpaQueryFactory
                 .select(qBean)
                 .from(qBean)
-                .where(dateFmt.eq(archiveDate));
+                .where(dateFmt.eq(req));
         return jpaQuery.fetch();
     }
 }
