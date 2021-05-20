@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * @author: yuxh
  * @date: 2021/3/16 0:47
@@ -41,6 +43,7 @@ public class PostCommentService {
     }
 
     public void save(PostComment req) {
+        req.setCreateTime(LocalDateTime.now());
         postCommentDao.save(req);
     }
 }

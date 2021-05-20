@@ -33,7 +33,6 @@ public class PostCommentDslDaoImpl implements PostCommentDslDao {
                         qBean.type, qBean.content, qBean.postId,
                         qBean.createTime)).from(qBean);
         jpaQuery.where(qBean.postId.eq(req.getPostId()));
-        jpaQuery.where(qBean.type.eq(req.getType()));
         jpaQuery.orderBy(qBean.createTime.desc());
 
         jpaQuery.offset(page.getOffset()).limit(page.getPageSize());
@@ -50,7 +49,6 @@ public class PostCommentDslDaoImpl implements PostCommentDslDao {
                         qBean.type, qBean.content, qBean.postId,
                         qBean.createTime)).from(qBean);
         jpaQuery.where(qBean.postId.eq(req.getPostId()));
-        jpaQuery.where(qBean.type.eq(req.getType()));
         jpaQuery.where(qBean.pid.eq(req.getPid()));
         jpaQuery.orderBy(qBean.createTime.desc());
         return jpaQuery.fetch();
