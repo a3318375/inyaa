@@ -56,7 +56,8 @@ public class PostInfoService {
 
     public BaseResult<PostsAdminVO> get(int id) {
         PostInfo info = postInfoDao.getOne(id);
-
+        info.setViews(info.getViews() + 1);
+        postInfoDao.save(info);
         PostsAdminVO vo = new PostsAdminVO();
         BeanUtils.copyProperties(info, vo);
         String context = postArticleDao.getContextByPostId(info.getId());

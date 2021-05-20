@@ -4,7 +4,9 @@ import com.inyaa.base.bean.BaseResult;
 import com.inyaa.web.auth.bean.UserInfo;
 import com.inyaa.web.auth.service.AuthUserService;
 import com.inyaa.web.posts.bean.PostComment;
+import com.inyaa.web.posts.bean.PostInfo;
 import com.inyaa.web.posts.dao.PostCommentDao;
+import com.inyaa.web.posts.dao.PostInfoDao;
 import com.inyaa.web.posts.vo.PostCommentVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PostCommentService {
 
+    private final PostInfoDao postInfoDao;
     private final PostCommentDao postCommentDao;
     private final AuthUserService authUserService;
 
@@ -45,5 +48,9 @@ public class PostCommentService {
     public void save(PostComment req) {
         req.setCreateTime(LocalDateTime.now());
         postCommentDao.save(req);
+
+        PostInfo info = postInfoDao.getOne(req.getPostId());
+        info.setComments(info.getComments() + 1);
+        postInfoDao.save(info);
     }
 }
